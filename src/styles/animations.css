@@ -1,0 +1,251 @@
+/* ============================================
+   METAMASK-INSPIRED ANIMATIONS - AMPLIFIED
+   Pure CSS - Dramatic & Noticeable
+   ============================================ */
+
+/* Skeleton Loading Pulse */
+@keyframes skeleton-pulse {
+
+    0%,
+    100% {
+        opacity: 0.2;
+        background-color: var(--mm-cream);
+    }
+
+    50% {
+        opacity: 0.1;
+        background-color: #E8D5C4;
+    }
+}
+
+.skeleton {
+    animation: skeleton-pulse 1400ms cubic-bezier(0, 0, 1, 1) infinite;
+    background-clip: padding-box;
+    cursor: default;
+    pointer-events: none;
+    user-select: none;
+    border-radius: var(--radius-md);
+}
+
+.skeleton * {
+    visibility: hidden;
+}
+
+/* Smooth Hover Lift - AMPLIFIED FOR VISIBILITY */
+@keyframes hover-lift-dramatic {
+    0% {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    100% {
+        transform: translateY(-16px) scale(1.03);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3), 0 0 60px rgba(136, 92, 246, 0.4);
+    }
+}
+
+.hover-lift {
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform, box-shadow, filter;
+}
+
+.hover-lift:hover {
+    animation: hover-lift-dramatic 0.5s forwards;
+    filter: brightness(1.08) saturate(1.1);
+    cursor: pointer;
+}
+
+/* Number Highlight - AMPLIFIED with Glow and Pulse */
+@keyframes number-glow {
+    0% {
+        color: var(--mm-purple);
+        transform: scale(1.15);
+        text-shadow:
+            0 0 20px rgba(136, 92, 246, 0.9),
+            0 0 40px rgba(136, 92, 246, 0.6),
+            0 0 60px rgba(136, 92, 246, 0.3);
+    }
+
+    50% {
+        text-shadow:
+            0 0 30px rgba(136, 92, 246, 0.7),
+            0 0 50px rgba(136, 92, 246, 0.5),
+            0 0 70px rgba(136, 92, 246, 0.2);
+    }
+
+    100% {
+        color: inherit;
+        transform: scale(1);
+        text-shadow: none;
+    }
+}
+
+.number-highlight {
+    font-family: var(--font-roboto-mono), 'Roboto Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    animation: number-glow 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: inline-block;
+    font-weight: 700;
+}
+
+/* Fade In (for content appearing) */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.fade-in {
+    animation: fade-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Fade In with Delay (for staggered lists) */
+.fade-in-delay-1 {
+    animation: fade-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+}
+
+.fade-in-delay-2 {
+    animation: fade-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}
+
+.fade-in-delay-3 {
+    animation: fade-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s both;
+}
+
+/* Scale In (for modals/cards) */
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.scale-in {
+    animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Slide Up (for bottom sheets/notifications) */
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.slide-up {
+    animation: slide-up 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Shimmer Effect - AMPLIFIED */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.shimmer {
+    background: linear-gradient(90deg,
+            var(--mm-cream) 0%,
+            #D8C5B8 50%,
+            var(--mm-cream) 100%);
+    background-size: 1000px 100%;
+    animation: shimmer 1.5s linear infinite;
+}
+
+/* Pulse - MORE DRAMATIC */
+@keyframes pulse-dramatic {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(136, 92, 246, 0.5);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(0.92);
+        box-shadow: 0 0 40px rgba(136, 92, 246, 0.7);
+    }
+}
+
+.pulse {
+    animation: pulse-dramatic 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Spin (for loading spinners) */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Bounce - MORE PRONOUNCED */
+@keyframes bounce-dramatic {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.bounce {
+    animation: bounce-dramatic 1s ease-in-out infinite;
+}
+
+/* Glow Effect - INTENSIFIED */
+@keyframes glow-intense {
+
+    0%,
+    100% {
+        box-shadow: 0 0 30px rgba(0, 230, 118, 0.4), 0 0 60px rgba(0, 230, 118, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 50px rgba(0, 230, 118, 0.7), 0 0 100px rgba(0, 230, 118, 0.4);
+    }
+}
+
+.glow {
+    animation: glow-intense 2s ease-in-out infinite;
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

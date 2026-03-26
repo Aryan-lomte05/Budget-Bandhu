@@ -1,0 +1,33 @@
+/* Card Hover Color Shifts */
+.mm-card.hover-lift:hover {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F3E8FF 100%) !important;
+    border-color: var(--mm-purple) !important;
+}
+
+.mm-card-colored.mm-card-orange.hover-lift:hover {
+    filter: brightness(1.1) saturate(1.2);
+    transform: translateY(-12px) scale(1.02) rotate(1deg);
+}
+
+.mm-card-colored.mm-card-green.hover-lift:hover {
+    filter: brightness(1.1) saturate(1.2);
+    transform: translateY(-12px) scale(1.02) rotate(-1deg);
+}
+
+/* Number Glow on Parent Hover */
+.hover-lift:hover .number-highlight {
+    text-shadow: 0 0 20px rgba(136, 92, 246, 0.6), 0 0 40px rgba(136, 92, 246, 0.3);
+    animation: none;
+    transform: scale(1.05);
+}
+
+/* Icon Bounce on Card Hover */
+.hover-lift:hover .lucide {
+    animation: bounce 0.6s ease-in-out;
+}
+
+/* Enhanced Glow for Purple Gradient Cards */
+.bg-gradient-to-br.from-mm-purple.to-mm-lavender.hover-lift:hover {
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.3), 0 0 60px rgba(183, 148, 246, 0.8) !important;
+    transform: translateY(-16px) scale(1.05);
+}

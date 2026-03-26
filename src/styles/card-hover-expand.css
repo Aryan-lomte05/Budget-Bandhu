@@ -1,0 +1,54 @@
+/* MetaMask Card Hover Expansion Effect - FORCED OVERRIDE */
+
+/* Main hover container */
+.mm-card-hover {
+    position: relative !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: transform !important;
+    overflow: hidden !important;
+    /* Ensure content is masked initially */
+    transform-origin: center center !important;
+}
+
+/* Hover state - Force Scale and Z-Index */
+.mm-card-hover:hover {
+    transform: scale(1.1) !important;
+    /* Made slightly larger for visibility */
+    z-index: 100 !important;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Hidden details that appear on hover */
+.mm-card-details {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    /* Darker background for contrast */
+    backdrop-filter: blur(12px) !important;
+    padding: 20px !important;
+    transform: translateY(105%) !important;
+    /* Start fully hidden */
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 0 !important;
+    z-index: 20 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Reveal details on hover */
+.mm-card-hover:hover .mm-card-details {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+}
+
+/* Slide main content up on hover */
+.mm-card-main-content {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    height: 100%;
+}
+
+.mm-card-hover:hover .mm-card-main-content {
+    transform: translateY(-20px) !important;
+    /* Slide up more noticeable */
+}

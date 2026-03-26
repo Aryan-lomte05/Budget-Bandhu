@@ -1,0 +1,41 @@
+/* MetaMask Grid Layout - CLEAN VERSION */
+.metamask-exact-grid {
+    display: grid;
+    grid-template-columns: 380px 380px;
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.mm-left-column,
+.mm-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Card Heights */
+.mm-card-purple-top {
+    height: 220px;
+}
+
+.mm-card-purple-bottom {
+    height: 180px;
+}
+
+.mm-card-teal-tall {
+    height: 280px;
+}
+
+.mm-card-orange-wide {
+    height: 180px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .metamask-exact-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+}

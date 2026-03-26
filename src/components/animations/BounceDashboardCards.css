@@ -1,0 +1,46 @@
+.bounce-dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 24px;
+    padding: 40px 20px;
+    perspective: 1000px;
+}
+
+.bounce-dashboard-card {
+    flex: 1;
+    min-width: 0;
+    max-width: 400px;
+    border-radius: 24px;
+    overflow: visible;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    will-change: transform;
+}
+
+.bounce-dashboard-card:hover {
+    z-index: 10;
+}
+
+/* Ensure inner card content fills the wrapper */
+.bounce-dashboard-card>* {
+    height: 100%;
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .bounce-dashboard-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .bounce-dashboard-card {
+        max-width: 100%;
+        width: 100%;
+        transform: none !important;
+    }
+}

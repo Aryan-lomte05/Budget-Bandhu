@@ -1,0 +1,439 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap');
+@import '../styles/metamask-theme.css';
+@import '../styles/metamask-layout.css';
+@import '../styles/animations.css';
+@import '../styles/card-enhancements.css';
+@import '../styles/metamask-grid.css';
+@import '../styles/card-hover-expand.css';
+@import '../styles/chat-page.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #F2E8DC;
+    /* MetaMask cream */
+    color: #111827;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* MetaMask Card Hover Expansion - INLINED FOR RELIABILITY */
+.mm-card-hover {
+  position: relative !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  will-change: transform !important;
+  overflow: hidden !important;
+  transform-origin: center center !important;
+}
+
+.mm-card-hover:hover {
+  transform: scale(1.1) !important;
+  z-index: 100 !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5) !important;
+}
+
+.mm-card-details {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  padding: 20px !important;
+  transform: translateY(105%) !important;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  opacity: 0 !important;
+  z-index: 20 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.mm-card-hover:hover .mm-card-details {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+.mm-card-main-content {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  height: 100%;
+}
+
+.mm-card-hover:hover .mm-card-main-content {
+  transform: translateY(-25px) !important;
+}
+
+/* Piggy Mascot Canvas */
+.piggy-canvas {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 50;
+  pointer-events: none;
+  /* Let clicks pass through */
+}
+
+/* 3D Logo Container Transitions */
+/* ===== 3D Piggy Bank Preloader & Animation ===== */
+
+.preloader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(ellipse at center, #1a0a3d 0%, #0d0520 60%, #080310 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.logo-container {
+  position: fixed !important;
+  z-index: 10000;
+  pointer-events: none;
+  transition: transform 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              width 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              height 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              bottom 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              right 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              top 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              left 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 1.8s ease;
+  will-change: transform, top, left, bottom, right, width, height;
+}
+
+/* Initial Hero State (Preloader) */
+.logo-hero {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 500px !important;
+  height: 500px !important;
+  bottom: auto !important;
+  right: auto !important;
+}
+
+/* Corner Fixed State (Exact 100px as requested) */
+.logo-corner {
+  top: auto !important;
+  left: auto !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  width: 100px !important;
+  height: 100px !important;
+  transform: translate(0, 0) !important;
+}
+
+@media (max-width: 768px) {
+  .logo-hero {
+    width: 320px !important;
+    height: 320px !important;
+  }
+  .logo-corner {
+    width: 80px !important;
+    height: 80px !important;
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+}
+
+/* ============================================
+   METAMASK 3D EFFECTS
+   ============================================ */
+
+/* 3D Perspective Container */
+.perspective-container {
+  perspective: 1000px;
+  perspective-origin: center;
+}
+
+/* 3D Card Transform */
+.card-3d {
+  transform-style: preserve-3d;
+  transform: rotateX(2deg) rotateY(-2deg);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-3d:hover {
+  transform: rotateX(0deg) rotateY(0deg) scale(1.02);
+}
+
+/* Parallax Layers */
+.parallax-slow {
+  will-change: transform;
+}
+
+.parallax-fast {
+  will-change: transform;
+}
+
+/* Smooth Scroll */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(229, 231, 235, 0.5);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #10B981 0%, #3B82F6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #F3F4F6;
+    border-radius: 9999px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #D1D5DB;
+    border-radius: 9999px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #9CA3AF;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+
+  33% {
+    transform: translateY(-20px) translateX(10px);
+  }
+
+  66% {
+    transform: translateY(10px) translateX(-10px);
+  }
+}
+
+.animate-float {
+  animation: float linear infinite;
+}
+
+/* ============================================
+   METAMASK SECTION ROUNDING
+   ============================================ */
+
+/* Rounded section backgrounds */
+.mm-section-mint,
+.mm-section-cream,
+.mm-section-orange,
+.mm-section-midnight {
+  border-radius: 2rem;
+  margin: 0.5rem;
+}
+
+@media (min-width: 768px) {
+
+  .mm-section-mint,
+  .mm-section-cream,
+  .mm-section-orange,
+  .mm-section-midnight {
+    border-radius: 3rem;
+    margin: 1rem;
+  }
+}
+
+/* ============================================
+   METAMASK MICROINTERACTIONS
+   ============================================ */
+
+/* Button hover lift */
+.mm-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.mm-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Playful coin wiggle animation */
+@keyframes coin-wiggle {
+
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(-10deg) scale(1.1);
+  }
+
+  75% {
+    transform: rotate(10deg) scale(1.1);
+  }
+}
+
+.coin-wiggle:hover {
+  animation: coin-wiggle 0.5s ease-in-out;
+}
+
+/* Sparkle effect on hover */
+@keyframes sparkle {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+.sparkle-on-hover::after {
+  content: '✨';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 1rem;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sparkle-on-hover:hover::after {
+  animation: sparkle 0.6s ease-out;
+}
+
+/* Interactive card slight tilt on hover */
+.interactive-tilt {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-tilt:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-4px);
+}
+
+/* Stat card pulse on value change */
+@keyframes stat-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.stat-pulse {
+  animation: stat-pulse 0.3s ease-out;
+}
+
+/* Icon bounce on hover */
+.icon-bounce:hover {
+  animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Gradient shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gradient-shimmer {
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Smooth focus ring */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+}
+
+/* ============================================
+   LENIS SMOOTH SCROLL
+   ============================================ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
