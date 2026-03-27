@@ -1,0 +1,54 @@
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 11.6s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/23) ...
+  Generating static pages using 7 workers (5/23) 
+  Generating static pages using 7 workers (11/23) 
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+  Generating static pages using 7 workers (17/23) 
+✓ Generating static pages using 7 workers (23/23) in 806.4ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /auth/login
+├ ○ /auth/signup
+├ ○ /auth/verify
+├ ○ /budget
+├ ○ /chat
+├ ○ /friends
+├ ○ /gamification
+├ ○ /goals
+├ ○ /insights
+├ ○ /literacy
+├ ƒ /literacy/[courseId]
+├ ○ /literacy/calculators/compound
+├ ○ /literacy/calculators/emi
+├ ○ /literacy/calculators/lumpsum
+├ ○ /literacy/calculators/retirement
+├ ○ /literacy/calculators/sip
+├ ○ /literacy/calculators/tax
+├ ○ /profile
+├ ○ /settings
+└ ○ /transactions
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

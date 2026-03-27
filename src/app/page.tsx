@@ -16,12 +16,14 @@ import { EmergencyFundBarometer } from "@/components/dashboard/EmergencyFundBaro
 import { SpendingInsights } from "@/components/dashboard/SpendingInsights";
 import { FinancialTimeMachine } from "@/components/dashboard/FinancialTimeMachine";
 import { TaxOptimizerDashboard } from "@/components/dashboard/TaxOptimizerDashboard";
+import { CrystalBall } from "@/components/shared/CrystalBall";
 import { mockData } from "@/lib/api/mock-data";
 import { useDashboard } from "@/lib/hooks/useMLApi";
 import { useUserStore } from "@/lib/store/useUserStore";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { TrendingUp, Wallet, Target, Sparkles, PiggyBank, Shield, Loader2 } from "lucide-react";
+import { TrendingUp, Wallet, Target, Sparkles, PiggyBank, Shield, Loader2, Coins } from "lucide-react";
 import { NumericFormat } from "react-number-format";
+import { getETHBalance, formatCryptoBalance } from "@/lib/utils/web3";
 
 // Demo user ID - replace with actual user from auth
 const DEMO_USER_ID = "696a022c3c758e29b2ca8d50";
@@ -29,8 +31,39 @@ const MM_EASING = [0.16, 1, 0.3, 1] as const;
 
 export default function DashboardPage() {
   // Get user from store or use demo
-  const { userId } = useUserStore();
+  const { userId, walletAddress } = useUserStore();
   const activeUserId = userId || DEMO_USER_ID;
+
+  // Crypto state
+  const [ethBalance, setEthBalance] = useState<string>("0");
+  const [ethPriceINR, setEthPriceINR] = useState<number>(250000); // Fallback price
+  const [isCryptoLoading, setIsCryptoLoading] = useState(false);
+
+  useEffect(() => {
+    if (walletAddress) {
+      fetchCryptoData();
+    }
+  }, [walletAddress]);
+
+  const fetchCryptoData = async () => {
+    setIsCryptoLoading(true);
+    try {
+      // Fetch balance
+      const balance = await getETHBalance(walletAddress!);
+      setEthBalance(balance);
+
+      // Fetch price from CoinGecko
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr');
+      const data = await response.json();
+      if (data.ethereum?.inr) {
+        setEthPriceINR(data.ethereum.inr);
+      }
+    } catch (error) {
+      console.error("Error fetching crypto data", error);
+    } finally {
+      setIsCryptoLoading(false);
+    }
+  };
 
   // Fetch real dashboard data from API
   const { data: apiData, loading, error, refetch } = useDashboard(activeUserId);
@@ -184,7 +217,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Purple Card 2 */}
-                <div className="mm-card-purple-bottom mm-card-hover cursor-pointer rounded-3xl p-6 bg-gradient-to-br from-purple-700 to-purple-900 transform-gpu">
+                <div className="mm-card-purple-bottom mm-card-hover cursor-pointer rounded-3xl p-6 bg-gradient-to-br from-purple-700 to-purple-900 transform-gpu mb-6">
                   <div className="flex items-center justify-between h-full">
                     <div>
                       <Sparkles className="w-10 h-10 text-white mb-2" />
@@ -193,6 +226,36 @@ export default function DashboardPage() {
                     <div className="text-5xl font-black text-white">{dashboardData.financialScore}</div>
                   </div>
                 </div>
+
+                {/* Crypto Assets Card - Only if wallet connected */}
+                {walletAddress && (
+                  <div className="mm-card-orange mm-card-hover cursor-pointer rounded-3xl p-6 bg-gradient-to-br from-orange-500 to-orange-700 transform-gpu shadow-xl border border-orange-400/30">
+                    <div className="flex flex-col h-full justify-between">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                          <Coins className="w-7 h-7 text-white" />
+                        </div>
+                        {isCryptoLoading && <Loader2 className="w-4 h-4 text-white/50 animate-spin" />}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-white mb-1">Crypto Assets</h3>
+                        <div className="text-3xl font-black text-white mb-1 font-display">
+                          <NumericFormat
+                            value={Number(ethBalance) * ethPriceINR}
+                            displayType="text"
+                            thousandSeparator=","
+                            prefix="₹"
+                            renderText={(value) => <span>{value}</span>}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between text-white/80 text-sm font-bold">
+                          <span>{formatCryptoBalance(ethBalance)} ETH</span>
+                          <span className="text-white/60">@ ₹{ethPriceINR.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* RIGHT COLUMN */}
@@ -304,6 +367,14 @@ export default function DashboardPage() {
               <TaxOptimizerDashboard />
             </div>
           </div>
+        </section>
+
+        {/* SECTION: Crystal Ball AI Forecast */}
+        <section className="bg-white scroll-reveal">
+          <CrystalBall 
+            forecast={dashboardData.forecast} 
+            isLoading={loading} 
+          />
         </section>
 
         {/* SECTION 5: Trust Elements - Mint Gradient */}

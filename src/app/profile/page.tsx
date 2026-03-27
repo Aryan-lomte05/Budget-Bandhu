@@ -14,12 +14,49 @@ import {
     Share2,
     Settings,
     ChevronRight,
+    Wallet,
+    LogOut,
 } from 'lucide-react';
 import { useSettingsStore } from '@/lib/store/useSettingsStore';
+import { useUserStore } from '@/lib/store/useUserStore';
+import { connectWallet, getETHBalance, formatCryptoBalance } from '@/lib/utils/web3';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export default function ProfilePage() {
     const { profile } = useSettingsStore();
+    const { walletAddress, setWalletAddress } = useUserStore();
+    const [ethBalance, setEthBalance] = useState<string>('0');
+    const [isConnecting, setIsConnecting] = useState(false);
+
+    useEffect(() => {
+        if (walletAddress) {
+            fetchBalance(walletAddress);
+        }
+    }, [walletAddress]);
+
+    const fetchBalance = async (address: string) => {
+        const balance = await getETHBalance(address);
+        setEthBalance(balance);
+    };
+
+    const handleConnect = async () => {
+        setIsConnecting(true);
+        const address = await connectWallet();
+        if (address) {
+            setWalletAddress(address);
+        }
+        setIsConnecting(false);
+    };
+
+    const handleDisconnect = () => {
+        setWalletAddress(null);
+        setEthBalance('0');
+    };
+
+    const truncateAddress = (address: string) => {
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    };
 
     const stats = [
         { label: 'Total Savings', value: '₹2,45,680', change: '+12.5%', icon: DollarSign, color: 'from-emerald-500 to-green-600' },
@@ -141,6 +178,58 @@ export default function ProfilePage() {
                         );
                     })}
                 </div>
+
+                {/* Crypto Wallet Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="backdrop-blur-xl bg-white/70 rounded-3xl shadow-xl border border-white/50 p-8"
+                >
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg">
+                                <Wallet className="w-8 h-8 text-white" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-800">Crypto Assets</h2>
+                                <p className="text-gray-600">Securely track your Web3 portfolio</p>
+                            </div>
+                        </div>
+
+                        {!walletAddress ? (
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={handleConnect}
+                                disabled={isConnecting}
+                                className="px-8 py-4 rounded-2xl bg-[#E2761B] hover:bg-[#D16812] text-white font-bold shadow-lg transition-all flex items-center gap-3"
+                            >
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" alt="MetaMask" className="w-6 h-6" />
+                                {isConnecting ? 'Connecting...' : 'Connect MetaMask'}
+                            </motion.button>
+                        ) : (
+                            <div className="flex flex-col md:flex-row items-center gap-4">
+                                <div className="text-right">
+                                    <div className="text-sm font-bold text-gray-500 uppercase tracking-wider">Connected Wallet</div>
+                                    <div className="text-xl font-mono font-bold text-gray-800">{truncateAddress(walletAddress)}</div>
+                                    <div className="text-lg font-bold text-orange-600">
+                                        {formatCryptoBalance(ethBalance)} ETH
+                                    </div>
+                                </div>
+                                <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={handleDisconnect}
+                                    className="p-4 rounded-2xl bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 transition-all"
+                                    title="Disconnect Wallet"
+                                >
+                                    <LogOut className="w-6 h-6" />
+                                </motion.button>
+                            </div>
+                        )}
+                    </div>
+                </motion.div>
+
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Achievements */}

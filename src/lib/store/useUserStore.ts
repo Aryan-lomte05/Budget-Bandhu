@@ -13,9 +13,11 @@ interface UserState {
     user: User | null;
     isLoggedIn: boolean;
     isLoading: boolean;
+    walletAddress: string | null;
 
     // Actions
     setUser: (user: User) => void;
+    setWalletAddress: (address: string | null) => void;
     login: (mobile_number: string, password: string) => Promise<boolean>;
     register: (data: { name: string; mobile_number: string; password: string; income?: number }) => Promise<boolean>;
     logout: () => void;
@@ -30,6 +32,7 @@ export const useUserStore = create<UserState>()(
             user: null,
             isLoggedIn: false,
             isLoading: false,
+            walletAddress: null,
 
             // Set user
             setUser: (user) => set({
@@ -37,6 +40,9 @@ export const useUserStore = create<UserState>()(
                 userId: user.id,
                 isLoggedIn: true
             }),
+
+            // Set wallet address
+            setWalletAddress: (address) => set({ walletAddress: address }),
 
             // Login with mobile number
             login: async (mobile_number, password) => {
@@ -101,6 +107,7 @@ export const useUserStore = create<UserState>()(
             partialize: (state) => ({
                 userId: state.userId,
                 isLoggedIn: state.isLoggedIn,
+                walletAddress: state.walletAddress,
             }),
         }
     )

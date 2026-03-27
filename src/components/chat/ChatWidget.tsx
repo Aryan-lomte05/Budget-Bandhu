@@ -7,6 +7,7 @@ import { useUserStore } from '@/lib/store/useUserStore';
 import { mlApi } from '@/lib/api/ml-api';
 import { ChatMessage } from '@/lib/types/chat';
 import { usePathname } from 'next/navigation';
+import { VoiceInput } from './VoiceInput';
 
 export function ChatWidget() {
     const { userId, isLoggedIn } = useUserStore();
@@ -17,6 +18,8 @@ export function ChatWidget() {
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [sessionId, setSessionId] = useState<string | undefined>(undefined);
+    const [selectedLanguage, setSelectedLanguage] = useState('en-US'); // Default to English
+    const [isTranslating, setIsTranslating] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Determine if widget should be shown
@@ -53,28 +56,48 @@ export function ChatWidget() {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isTyping]);
 
-    const handleSend = async () => {
-        if (!input.trim() || isTyping || !userId) return;
+    const handleSend = async (customQuery?: { original_text: string, translated_text: string, language: string }) => {
+        const queryText = customQuery ? customQuery.translated_text : input;
+        const displayContent = customQuery ? customQuery.original_text : input;
+        const currentLang = customQuery ? customQuery.language : 'en-US';
+
+        if (!queryText.trim() || isTyping || !userId) return;
 
         const userMsg: ChatMessage = {
             id: `widget_${Date.now()}`,
             role: 'user',
-            content: input,
+            content: displayContent,
             timestamp: new Date().toISOString()
         };
 
         setMessages(prev => [...prev, userMsg]);
-        setInput('');
+        if (!customQuery) setInput('');
         setIsTyping(true);
 
         try {
-            const res = await mlApi.chat.send(userId, input, sessionId);
+            // Send to backend (using translated text if available)
+            const res = await mlApi.chat.send(userId, customQuery || queryText, sessionId);
             if (res.session_id) setSessionId(res.session_id);
+
+            let aiContent = res.response;
+
+            // Translate AI response back to user language if not English
+            if (currentLang !== 'en-US' && currentLang !== 'en') {
+                setIsTranslating(true);
+                try {
+                    const translation = await mlApi.translate.text(aiContent, currentLang.split('-')[0], 'en');
+                    aiContent = translation.translatedText;
+                } catch (tErr) {
+                    console.error('AI Response Translation failed:', tErr);
+                } finally {
+                    setIsTranslating(false);
+                }
+            }
 
             const aiMsg: ChatMessage = {
                 id: `widget_${Date.now()}_ai`,
                 role: 'assistant',
-                content: res.response,
+                content: aiContent,
                 timestamp: new Date().toISOString(),
                 metadata: { confidence: res.confidence }
             };
@@ -83,6 +106,32 @@ export function ChatWidget() {
             console.error('Chat error:', err);
         } finally {
             setIsTyping(false);
+        }
+    };
+
+    const handleVoiceTranscript = async (transcript: string, language: string) => {
+        setSelectedLanguage(language);
+        setIsTranslating(true);
+        
+        try {
+            // Translate transcript to English before sending to backend
+            const translation = await mlApi.translate.text(transcript, 'en', language.split('-')[0]);
+            
+            await handleSend({
+                original_text: transcript,
+                translated_text: translation.translatedText,
+                language: language
+            });
+        } catch (err) {
+            console.error('STT Translation failed:', err);
+            // Fallback: send as is
+            await handleSend({
+                original_text: transcript,
+                translated_text: transcript,
+                language: language
+            });
+        } finally {
+            setIsTranslating(false);
         }
     };
 
@@ -134,7 +183,7 @@ export function ChatWidget() {
                                     {isTyping && (
                                         <div className="flex justify-start">
                                             <div className="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-none animate-pulse text-xs text-gray-400">
-                                                Thinking...
+                                                {isTranslating ? 'Translating...' : 'Thinking...'}
                                             </div>
                                         </div>
                                     )}
@@ -151,9 +200,14 @@ export function ChatWidget() {
                                             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                                             placeholder="Ask something..."
                                             className="flex-1 bg-transparent border-none focus:ring-0 text-sm"
+                                            disabled={isTyping}
+                                        />
+                                        <VoiceInput 
+                                            onTranscript={handleVoiceTranscript} 
+                                            isProcessing={isTyping} 
                                         />
                                         <button
-                                            onClick={handleSend}
+                                            onClick={() => handleSend()}
                                             disabled={!input.trim() || isTyping}
                                             className="p-2 bg-mm-purple rounded-lg text-white disabled:opacity-50"
                                         >

@@ -667,7 +667,7 @@ export const mlApi = {
 
     // ===== AI CHAT =====
     chat: {
-        send: async (userId: string, query: string, sessionId?: string): Promise<{
+        send: async (userId: string, query: string | { original_text: string, translated_text: string, language: string }, sessionId?: string): Promise<{
             response: string;
             session_id: string;
             confidence: number;
@@ -676,10 +676,14 @@ export const mlApi = {
                 semantic_count: number;
             };
         }> => {
+            const payload = typeof query === 'string' 
+                ? { user_id: userId, query, session_id: sessionId }
+                : { user_id: userId, ...query, query: query.translated_text, session_id: sessionId };
+
             return callApi<any>(
                 '/api/v1/chat',
                 { response: 'I am in mock mode. Please start the backend for real AI responses!', session_id: 'mock_session', confidence: 1.0, context_used: { episodic_count: 0, semantic_count: 0 } },
-                { method: 'POST', body: JSON.stringify({ user_id: userId, query, session_id: sessionId }) }
+                { method: 'POST', body: JSON.stringify(payload) }
             );
         },
         getHistory: async (userId: string): Promise<ChatMessage[]> => {
